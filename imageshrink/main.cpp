@@ -3,9 +3,16 @@
  * @date 2019-03-05
  */
 
+#ifdef USE_TBB
 #include <tbb/task.h>
 #include <tbb/task_group.h>
 #include <tbb/task_scheduler_init.h>
+#endif
+
+#ifdef USE_ASIO
+#include <boost/asio.hpp>
+#include <boost/asio/thread_pool.hpp>
+#endif
 
 #include <boost/filesystem.hpp>
 
@@ -42,8 +49,12 @@ int main(int argc, char** argv) {
   }
   std::deque<path> queue;
   queue.emplace_back(path(argv[1]));
-  tbb::task_scheduler_init init(tbb::task_scheduler_init::automatic);
-  tbb::task_group taskGroup;
+#ifdef USE_ASIO
+  boost::asio::thread_pool threadPool(std::thread::hardware_concurrency());
+#elif defined(USE_TBB)
+  tbb::task_scheduler_init init(std::thread::hardware_concurrency());
+  tbb::task_group threadPool;
+#endif
   while (!queue.empty()) {
     path p(queue.front());
     queue.pop_front();
@@ -64,10 +75,19 @@ int main(int argc, char** argv) {
       if (extension != ".jpg" && extension != ".jpeg") {
         continue;
       }
-      taskGroup.run([=] { shrinkTask(filename); });
+      auto task = [=] { shrinkTask(filename); };
+#ifdef USE_ASIO
+      boost::asio::post(threadPool, task);
+#elif defined(USE_TBB)
+      threadPool.run(task);
+#endif
     }
   }
-  taskGroup.wait();
+#ifdef USE_ASIO
+  threadPool.join();
+#elif defined(USE_TBB)
+  threadPool.wait();
+#endif
   std::cout << std::endl;
   return EXIT_SUCCESS;
 }
