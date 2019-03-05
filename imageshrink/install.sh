@@ -2,7 +2,7 @@
 
 mkdir -p target
 
-pushd target
+cd target
 
 cmake -G"Ninja" \
   -DCMAKE_BUILD_TYPE=MinSizeRel \
@@ -12,4 +12,4 @@ cmake --build .
 
 ninja install
 
-popd
+cd ..
