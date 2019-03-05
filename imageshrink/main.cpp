@@ -3,15 +3,13 @@
  * @date 2019-03-05
  */
 
-#ifdef USE_TBB
-#include <tbb/task.h>
-#include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
-#endif
-
 #ifdef USE_ASIO
 #include <boost/asio.hpp>
 #include <boost/asio/thread_pool.hpp>
+#elif defined(USE_TBB)
+#include <tbb/task.h>
+#include <tbb/task_group.h>
+#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <boost/filesystem.hpp>
@@ -37,7 +35,11 @@ void shrinkTask(const std::string& filename) {
   command += filename;
   command += " ";
   command += filename;
-  std::system(command.c_str());
+  int rc = std::system(command.c_str());
+  if (rc != 0) {
+    std::scoped_lock<std::mutex> lock(consoleMutex);
+    std::cerr << "Command failed: " << command << std::endl;
+  }
 }
 
 int main(int argc, char** argv) {

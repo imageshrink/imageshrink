@@ -15,10 +15,10 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   add_definitions(-DUSE_TBB)
 endif ()
 
-add_executable(imageshrink
-  main.cpp
-)
+add_executable(imageshrink main.cpp)
 target_link_libraries(imageshrink ${Boost_LIBRARIES})
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   target_link_libraries(imageshrink tbb)
 endif ()
+
+install(TARGETS imageshrink RUNTIME DESTINATION bin)
