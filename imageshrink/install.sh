@@ -4,12 +4,12 @@ mkdir -p target
 
 cd target
 
-cmake -G"Ninja" \
+cmake \
   -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DCMAKE_INSTALL_PREFIX=$HOME/opt/imageshrink ..
 
 cmake --build .
 
-ninja install
+make install
 
 cd ..

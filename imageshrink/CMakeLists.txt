@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(imageshrink)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 

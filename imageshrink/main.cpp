@@ -27,7 +27,7 @@
 void shrinkTask(const std::string& filename) {
   static std::mutex consoleMutex;
   {
-    std::scoped_lock<std::mutex> lock(consoleMutex);
+    std::lock_guard<std::mutex> lock(consoleMutex);
     std::cout << "\33[2K\r";
     std::cout << "[Processing] " << filename << std::flush;
   }
@@ -37,7 +37,7 @@ void shrinkTask(const std::string& filename) {
   command += filename;
   int rc = std::system(command.c_str());
   if (rc != 0) {
-    std::scoped_lock<std::mutex> lock(consoleMutex);
+    std::lock_guard<std::mutex> lock(consoleMutex);
     std::cerr << "Command failed: " << command << std::endl;
   }
 }
