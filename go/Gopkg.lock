@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/gographics/gmagick"
+  packages = [".","types"]
+  revision = "6aafcccbf1fa55b3d438954e4033e4b4ddb71d35"
+  version = "v1.0.0"
+
+[[projects]]
   name = "gopkg.in/gographics/imagick.v2"
   packages = ["imagick","imagick/types"]
   revision = "589a8ef16fd4f08a29ad26afe5c33fb5673e4efc"
@@ -10,6 +16,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5672e9a66c2bcf76e4cab50b2f1186c6c32361d3c8bfa307b7ab20bcde821200"
+  inputs-digest = "bd5e2ee0b98c0ce4657857ab6027ff64ae4141ca34e15fded3868a074ca618ba"
   solver-name = "gps-cdcl"
   solver-version = 1
