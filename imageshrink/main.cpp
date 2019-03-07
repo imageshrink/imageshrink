@@ -62,8 +62,14 @@ int main(int argc, char** argv) {
     queue.pop_front();
     directory_iterator end_itr;
     for (directory_iterator itr(p); itr != end_itr; ++itr) {
+      if (is_symlink(itr->path())) {
+        continue;
+      }
       if (is_directory(itr->path())) {
         queue.push_back(itr->path());
+        continue;
+      }
+      if (!is_regular_file(itr->path())) {
         continue;
       }
       std::string filename = itr->path().string();
