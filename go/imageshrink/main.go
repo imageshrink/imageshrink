@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/gographics/gmagick"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -22,18 +21,13 @@ func main() {
 		defer waitGroup.Done()
 		for imagePath := range imagePaths {
 			fmt.Printf("[Processing] %s\n", imagePath)
-			data, err := ioutil.ReadFile(imagePath)
-			if err != nil {
-				fmt.Printf("[Error] Failed to read file: %s, error: %s\n", imagePath, err.Error())
-				continue
-			}
 			wand := gmagick.NewMagickWand()
-			err = wand.SetResourceLimit(gmagick.RESOURCE_MEMORY, 128*1024*1024)
+			err := wand.SetResourceLimit(gmagick.RESOURCE_MEMORY, 1024*1024*1024)
 			if err != nil {
 				fmt.Printf("[Error] Failed to set resource limit: %s, error: %s\n", imagePath, err.Error())
 				continue
 			}
-			err = wand.ReadImageBlob(data)
+			err = wand.ReadImage(imagePath)
 			if err != nil {
 				fmt.Printf("[Error] Failed to read image: %s, error: %s\n", imagePath, err.Error())
 				continue
