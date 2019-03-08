@@ -3,7 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"gopkg.in/gographics/imagick.v2/imagick"
+	"github.com/gographics/gmagick"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -51,7 +51,7 @@ func handlePost(writer http.ResponseWriter, request *http.Request)  {
 			return
 		}
 	}
-	wand := imagick.NewMagickWand()
+	wand := gmagick.NewMagickWand()
 	err = wand.ReadImageBlob(data)
 	if checkError(err, writer) {
 		return
@@ -66,11 +66,11 @@ func handlePost(writer http.ResponseWriter, request *http.Request)  {
 	}
 	newWidth := uint(width * scale)
 	newHeight := uint(height * scale)
-	err = wand.ResizeImage(newWidth, newHeight, imagick.FILTER_LANCZOS, 1)
+	err = wand.ResizeImage(newWidth, newHeight, gmagick.FILTER_LANCZOS, 1)
 	if checkError(err, writer) {
 		return
 	}
-	err = wand.SetImageCompressionQuality(uint(quality))
+	err = wand.SetCompressionQuality(uint(quality))
 	if checkError(err, writer) {
 		return
 	}
@@ -129,8 +129,8 @@ func handleGet(writer http.ResponseWriter, request *http.Request) {
 }
 
 func main() {
-	imagick.Initialize()
-	defer imagick.Terminate()
+	gmagick.Initialize()
+	defer gmagick.Terminate()
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == "POST" {
 			handlePost(writer, request)

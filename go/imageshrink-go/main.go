@@ -19,13 +19,14 @@ func main() {
 	imagePaths := make(chan string, 128)
 	worker := func(workerID int) {
 		defer waitGroup.Done()
+		var err error
 		for imagePath := range imagePaths {
 			fmt.Printf("[Processing] %s\n", imagePath)
 			wand := gmagick.NewMagickWand()
-			err := wand.SetResourceLimit(gmagick.RESOURCE_MEMORY, 1024*1024*1024)
+			err = wand.SetResourceLimit(gmagick.RESOURCE_MEMORY, 128*1024*1024)
 			if err != nil {
-				fmt.Printf("[Error] Failed to set resource limit: %s, error: %s\n", imagePath, err.Error())
-				continue
+				fmt.Printf("[Error] Failed to set resource, error: %s\n", err.Error())
+				return
 			}
 			err = wand.ReadImage(imagePath)
 			if err != nil {
@@ -37,7 +38,6 @@ func main() {
 			var scale = 1.0
 			if width > height {
 				scale = float64(4096) / width
-			} else {
 				scale = float64(4096) / height
 			}
 			newWidth := uint(width * scale)
