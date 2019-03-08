@@ -31,7 +31,7 @@ void shrinkTask(const std::string& filename) {
     std::cout << "\33[2K\r";
     std::cout << "[Processing] " << filename << std::flush;
   }
-  std::string command = "convert -resize 4000x4000 -quality 90 ";
+  std::string command = "convert -resize 4096x4096 -quality 90 ";
   command += filename;
   command += " ";
   command += filename;
