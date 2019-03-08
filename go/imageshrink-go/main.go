@@ -13,6 +13,11 @@ import (
 
 
 func main() {
+	args := os.Args
+	if len(args) != 2 {
+		fmt.Printf("Usage: imageshrink-go [path to scan]\n")
+		return
+	}
 	gmagick.Initialize()
 	defer gmagick.Terminate()
 	var waitGroup sync.WaitGroup
@@ -23,7 +28,7 @@ func main() {
 		for imagePath := range imagePaths {
 			fmt.Printf("[Processing] %s\n", imagePath)
 			wand := gmagick.NewMagickWand()
-			err = wand.SetResourceLimit(gmagick.RESOURCE_MEMORY, 128*1024*1024)
+			err = wand.SetResourceLimit(gmagick.RESOURCE_MEMORY, 512*1024*1024)
 			if err != nil {
 				fmt.Printf("[Error] Failed to set resource, error: %s\n", err.Error())
 				return
@@ -64,7 +69,7 @@ func main() {
 	for i := 0; i < numCPU; i++ {
 		go worker(i)
 	}
-	_ = filepath.Walk("/home/huahang/Desktop/s", func(filePath string, fileInfo os.FileInfo, err error) error {
+	_ = filepath.Walk(args[1], func(filePath string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
 			fmt.Printf("Hit an error! " + err.Error() + "\n")
 			return err

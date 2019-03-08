@@ -2,14 +2,19 @@
 
 
 [[projects]]
+  digest = "1:9659201af6279f96866f7f92d5ff6ac4955af409a6f31d584994339167054c51"
   name = "github.com/gographics/gmagick"
-  packages = [".","types"]
+  packages = [
+    ".",
+    "types",
+  ]
+  pruneopts = ""
   revision = "6aafcccbf1fa55b3d438954e4033e4b4ddb71d35"
   version = "v1.0.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "147eac4462ad5624728082558b3f3e86071055d781cd5cf91fca31f8d50f4da4"
+  input-imports = ["github.com/gographics/gmagick"]
   solver-name = "gps-cdcl"
   solver-version = 1
