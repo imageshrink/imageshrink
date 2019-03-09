@@ -22,7 +22,7 @@ func ImageShrink(scanPath string, worker Worker)  {
 	}
 	_ = filepath.Walk(scanPath, func(filePath string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
-			fmt.Printf("Hit an error! " + err.Error() + "\n")
+			fmt.Printf("[Error] Hit an error! " + err.Error() + "\n")
 			return err
 		}
 		if !fileInfo.Mode().IsRegular() {
