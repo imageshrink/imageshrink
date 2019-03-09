@@ -10,17 +10,18 @@ import (
 
 func convertWorker(workerID int, imagePaths <-chan string, waitGroup *sync.WaitGroup) {
 	defer waitGroup.Done()
-	var err error
 	for imagePath := range imagePaths {
 		fmt.Printf("[Processing] %s\n", imagePath)
-		convert, _ := exec.LookPath("convert")
+		convert, err := exec.LookPath("convert")
+		if nil != err {
+			panic("[Fatal] " + err.Error())
+			return
+		}
 		command := exec.Command(
 			convert,
 			"-resize" , "4096x4096", "-quality", "90", imagePath, imagePath)
 		err = command.Run()
 		if nil != err {
-			out, _ := command.CombinedOutput()
-			fmt.Printf(string(out))
 			fmt.Printf("[Error] Failed to process image: %s, error: %s\n", imagePath, err.Error())
 			continue
 		}
