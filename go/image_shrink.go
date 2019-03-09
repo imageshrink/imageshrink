@@ -10,9 +10,9 @@ import (
 	"sync"
 )
 
-type Worker func (workerID int, imagePaths <-chan string, waitGroup *sync.WaitGroup)
+type Worker func(workerID int, imagePaths <-chan string, waitGroup *sync.WaitGroup)
 
-func ImageShrink(scanPath string, worker Worker)  {
+func ImageShrink(scanPath string, worker Worker) {
 	var waitGroup sync.WaitGroup
 	imagePaths := make(chan string, 128)
 	numCPU := runtime.NumCPU()

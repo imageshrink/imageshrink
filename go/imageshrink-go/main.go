@@ -19,7 +19,7 @@ func convertWorker(workerID int, imagePaths <-chan string, waitGroup *sync.WaitG
 		}
 		command := exec.Command(
 			convert,
-			"-resize" , "4096x4096", "-quality", "90", imagePath, imagePath)
+			"-resize", "4096x4096", "-quality", "90", imagePath, imagePath)
 		err = command.Run()
 		if nil != err {
 			fmt.Printf("[Error] Failed to process image: %s, error: %s\n", imagePath, err.Error())
@@ -28,7 +28,7 @@ func convertWorker(workerID int, imagePaths <-chan string, waitGroup *sync.WaitG
 	}
 }
 
-func main()  {
+func main() {
 	args := os.Args
 	if len(args) != 2 {
 		fmt.Printf("Usage: imageshrink-go [path to scan]\n")

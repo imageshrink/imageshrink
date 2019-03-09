@@ -19,11 +19,11 @@ func checkError(err error, writer http.ResponseWriter) bool {
 		return false
 	}
 	writer.WriteHeader(500)
-	_, _ = io.WriteString(writer, err.Error() + "\n")
+	_, _ = io.WriteString(writer, err.Error()+"\n")
 	return true
 }
 
-func handlePost(writer http.ResponseWriter, request *http.Request)  {
+func handlePost(writer http.ResponseWriter, request *http.Request) {
 	var err error
 	file, _, err := request.FormFile("image")
 	if checkError(err, writer) {

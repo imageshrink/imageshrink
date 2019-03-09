@@ -24,7 +24,7 @@ func main() {
 		return
 	}
 	if response.StatusCode != 200 {
-		fmt.Println("Failed to upload: " + response.Status )
+		fmt.Println("Failed to upload: " + response.Status)
 		bodyBytes, _ := ioutil.ReadAll(response.Body)
 		fmt.Println("Failed to upload: " + string(bodyBytes))
 		return
