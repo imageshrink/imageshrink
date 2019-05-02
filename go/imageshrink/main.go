@@ -31,7 +31,7 @@ func convertWorker(workerID int, imagePaths <-chan string, waitGroup *sync.WaitG
 func main()  {
 	args := os.Args
 	if len(args) != 2 {
-		fmt.Printf("Usage: imageshrink-go [path to scan]\n")
+		fmt.Printf("Usage: imageshrink [path to scan]\n")
 		return
 	}
 	imageshrink.ImageShrink(args[1], convertWorker)
