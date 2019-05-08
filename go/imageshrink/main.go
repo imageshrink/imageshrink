@@ -1,18 +1,18 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"github.com/imageshrink/imageshrink/go"
-	"os/exec"
-	"strconv"
-	"sync"
+  "flag"
+  "fmt"
+  "github.com/imageshrink/imageshrink/go"
+  "os/exec"
+  "strconv"
+  "sync"
 )
 
 func workerImpl(workerID int, imagePaths <-chan string, size int, quality int, waitGroup *sync.WaitGroup) {
   defer waitGroup.Done()
-	sizeString := strconv.Itoa(size)
-	qualityString := strconv.Itoa(quality)
+  sizeString := strconv.Itoa(size)
+  qualityString := strconv.Itoa(quality)
   for imagePath := range imagePaths {
     fmt.Printf("[Processing] %s\n", imagePath)
     convert, err := exec.LookPath("convert")
@@ -20,7 +20,7 @@ func workerImpl(workerID int, imagePaths <-chan string, size int, quality int, w
       panic("[Fatal] " + err.Error())
       return
     }
-		command := exec.Command(
+    command := exec.Command(
       convert,
       "-resize" , sizeString +"x" + sizeString,
       "-quality", qualityString,
@@ -34,13 +34,13 @@ func workerImpl(workerID int, imagePaths <-chan string, size int, quality int, w
 }
 
 func buildWorker(size int, quality int) imageshrink.Worker {
-	return func (workerID int, imagePaths <-chan string, waitGroup *sync.WaitGroup) {
-		workerImpl(workerID, imagePaths, size, quality, waitGroup)
-	}
+  return func (workerID int, imagePaths <-chan string, waitGroup *sync.WaitGroup) {
+    workerImpl(workerID, imagePaths, size, quality, waitGroup)
+  }
 }
 
 func main()  {
-	size := flag.Int("size", 4096, "image size")
+  size := flag.Int("size", 4096, "image size")
   quality := flag.Int("quality", 90, "image quality (1~100)")
   flag.Parse()
   args := flag.Args()
