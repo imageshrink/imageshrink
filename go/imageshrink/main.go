@@ -24,6 +24,7 @@ func workerImpl(workerID int, imagePaths <-chan string, size int, quality int, w
       convert,
       "-resize" , sizeString +"x" + sizeString,
       "-quality", qualityString,
+      "-interlace", "JPEG",
       imagePath, imagePath)
     err = command.Run()
     if nil != err {
