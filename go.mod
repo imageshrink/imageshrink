@@ -1,4 +1,4 @@
-module github.com/imageshrink/imageshrink/go
+module github.com/imageshrink/imageshrink
 
 go 1.16
 

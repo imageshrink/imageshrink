@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"sync"
 
-	imageshrink "github.com/imageshrink/imageshrink/go"
+	imageshrink "github.com/imageshrink/imageshrink"
 )
 
 func localWorker(
