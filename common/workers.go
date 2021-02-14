@@ -72,7 +72,6 @@ func remoteWorker(
 		request, err := http.NewRequest(http.MethodPost, url, imageFile)
 		request.Header.Add("Content-Type", "image/jpeg")
 		request.Header.Add("Content-MD5", digestHex)
-		http.DefaultClient.Do(request)
 		resp, err := http.DefaultClient.Do(request)
 		if nil != err {
 			fmt.Printf(
@@ -83,7 +82,7 @@ func remoteWorker(
 			continue
 		}
 		defer resp.Body.Close()
-		if request.Response.StatusCode != http.StatusOK {
+		if resp.StatusCode != http.StatusOK {
 			fmt.Printf("[Error] Failed to process image: %v\n", resp.Status)
 			continue
 		}
@@ -100,14 +99,18 @@ func remoteWorker(
 		}
 		defer imageFileNew.Close()
 		digest, _, err = CopyAndComputeMD5(imageFileNew, resp.Body)
+		if err != nil {
+			fmt.Printf("[Error] Unable to copy image: %v\n", imagePath)
+			continue
+		}
 		digestHex = strings.ToUpper(fmt.Sprintf("%x", digest))
 		md5Header := resp.Header.Get("Content-MD5")
 		if len(md5Header) == 0 {
-			fmt.Printf("[Error] Missing Content-MD5 for image: %v\n", resp.Status)
+			fmt.Printf("[Error] Missing Content-MD5 for image: %v\n", imagePath)
 			continue
 		}
 		if md5Header != digestHex {
-			fmt.Printf("[Error] Content-MD5 not matched for image: %v\n", resp.Status)
+			fmt.Printf("[Error] Content-MD5 not matched for image: %v\n", imagePath)
 			continue
 		}
 	}
