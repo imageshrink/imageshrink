@@ -50,7 +50,7 @@ func main() {
 		if nil != err {
 			panic("[Fatal] " + err.Error())
 		}
-		command := exec.Command(convert, fileNameOld, fileNameNew)
+		command := exec.Command(convert, "-quality", "50", fileNameOld, fileNameNew)
 		err = command.Run()
 		if nil != err {
 			fmt.Printf(
