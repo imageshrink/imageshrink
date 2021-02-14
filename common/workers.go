@@ -2,7 +2,6 @@ package common
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -66,8 +65,15 @@ func remoteWorker(
 			continue
 		}
 		defer imageFile.Close()
+		digest, err := ComputeMD5(imageFile)
+		digestHex := strings.ToUpper(fmt.Sprintf("%x", digest))
+		imageFile.Seek(0, 0)
 		url := fmt.Sprintf("http://%v/convert", host)
-		resp, err := http.Post(url, "image/jpeg", imageFile)
+		request, err := http.NewRequest(http.MethodPost, url, imageFile)
+		request.Header.Add("Content-Type", "image/jpeg")
+		request.Header.Add("Content-MD5", digestHex)
+		http.DefaultClient.Do(request)
+		resp, err := http.DefaultClient.Do(request)
 		if nil != err {
 			fmt.Printf(
 				"[Error] Failed to transfer image: %s, error: %s\n",
@@ -76,12 +82,14 @@ func remoteWorker(
 			)
 			continue
 		}
-		if resp.StatusCode != http.StatusOK {
+		defer resp.Body.Close()
+		if request.Response.StatusCode != http.StatusOK {
 			fmt.Printf("[Error] Failed to process image: %v\n", resp.Status)
 			continue
 		}
-		buffer := make([]byte, 8192)
-		imageFileNew, err := os.OpenFile(imagePath+".HEIF", os.O_CREATE|os.O_WRONLY, 0644)
+		imageFileNew, err := os.OpenFile(
+			imagePath+".HEIF", os.O_CREATE|os.O_WRONLY, 0644,
+		)
 		if nil != err {
 			fmt.Printf(
 				"[Error] Failed to create image: %s, error: %s\n",
@@ -90,9 +98,18 @@ func remoteWorker(
 			)
 			continue
 		}
-		io.CopyBuffer(imageFileNew, resp.Body, buffer)
-		imageFileNew.Close()
-		resp.Body.Close()
+		defer imageFileNew.Close()
+		digest, _, err = CopyAndComputeMD5(imageFileNew, resp.Body)
+		digestHex = strings.ToUpper(fmt.Sprintf("%x", digest))
+		md5Header := resp.Header.Get("Content-MD5")
+		if len(md5Header) == 0 {
+			fmt.Printf("[Error] Missing Content-MD5 for image: %v\n", resp.Status)
+			continue
+		}
+		if md5Header != digestHex {
+			fmt.Printf("[Error] Content-MD5 not matched for image: %v\n", resp.Status)
+			continue
+		}
 	}
 }
 
