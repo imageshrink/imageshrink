@@ -1,0 +1,9 @@
+[submodule "deps/libheif"]
+	path = deps/libheif
+	url = https://github.com/strukturag/libheif
+[submodule "deps/imagemagick"]
+	path = deps/imagemagick
+	url = https://github.com/ImageMagick/ImageMagick
+[submodule "deps/liblqr"]
+	path = deps/liblqr
+	url = https://github.com/carlobaldassi/liblqr
