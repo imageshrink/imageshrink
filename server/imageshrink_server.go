@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -20,7 +19,7 @@ func main() {
 	flag.Parse()
 	err := os.MkdirAll(*dir, 0755)
 	if err != nil {
-		log.Fatalf("Unable to create working dir: %v\n", err)
+		panic(fmt.Sprintf("[Fatal] Unable to create working dir: %v\n", err))
 	}
 	http.HandleFunc("/ruok", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "imok")
@@ -35,14 +34,14 @@ func main() {
 		fileNameNew := fileNameOld + ".output.heif"
 		imageFileOld, err := os.OpenFile(fileNameOld, os.O_CREATE|os.O_WRONLY, 0644)
 		if nil != err {
-			log.Printf("Unable to open file: %v, err: %v\n", fileNameOld, err)
+			fmt.Printf("[Error] Unable to open file: %v, err: %v\n", fileNameOld, err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		defer os.Remove(fileNameOld)
 		digest, _, err := common.CopyAndComputeMD5(imageFileOld, r.Body)
 		if nil != err {
-			log.Printf("Unable to read request err: %v\n", err)
+			fmt.Printf("[Error] Unable to read request err: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -101,7 +100,7 @@ func main() {
 	})
 	err = http.ListenAndServe(fmt.Sprintf(":%v", *port), nil)
 	if err != nil {
-		log.Fatalf("Unable to start http server: %v\n", err)
+		panic(fmt.Sprintf("[Fatal] Unable to start http server: %v\n", err))
 	}
 	return
 }
