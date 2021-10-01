@@ -28,7 +28,7 @@ func localWorker(paths <-chan string, wg *sync.WaitGroup) {
 			panic("[Fatal] " + err.Error())
 		}
 		command := exec.Command(
-			convert, "-auto-orient", "-quality", "50", imagePath, imagePath+".HEIF",
+			convert, "-auto-orient", "-quality", "50", imagePath, imagePath+".HEIC",
 		)
 		err = command.Run()
 		if nil != err {
@@ -87,12 +87,12 @@ func remoteWorker(
 			continue
 		}
 		imageFileNew, err := os.OpenFile(
-			imagePath+".HEIF", os.O_CREATE|os.O_WRONLY, 0644,
+			imagePath+".HEIC", os.O_CREATE|os.O_WRONLY, 0644,
 		)
 		if nil != err {
 			fmt.Printf(
 				"[Error] Failed to create image: %s, error: %s\n",
-				imagePath+".HEIF",
+				imagePath+".HEIC",
 				err,
 			)
 			continue
