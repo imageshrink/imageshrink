@@ -9,12 +9,14 @@ import (
 	"github.com/imageshrink/imageshrink/common"
 )
 
-func buildWorkers(remotes string) []common.Worker {
+func buildWorkers(nproc int, remotes string) []common.Worker {
 	workers := make([]common.Worker, 0)
 	_, err := exec.LookPath("convert")
 	if nil == err {
-		workers = append(workers, common.MakeLocalWorker())
-		fmt.Println("[Worker] Added a local worker")
+		for i := 0; i < nproc; i++ {
+			workers = append(workers, common.MakeLocalWorker())
+			fmt.Println("[Worker] Added a local worker")
+		}
 	}
 	splits := strings.Split(remotes, ",")
 	for _, host := range splits {
@@ -32,12 +34,15 @@ func main() {
 		"remotes", "",
 		"remotes workers: host1:port1,host2:port2",
 	)
+	nproc := flag.Int(
+		"nproc", 1,
+		"number of local processes",
+	)
 	flag.Parse()
 	args := flag.Args()
 	if len(args) != 1 {
 		fmt.Printf("Usage: imageshrink [path to scan]\n")
 		return
 	}
-	common.DoImageShrink(args[0], buildWorkers(*remotes))
-	return
+	common.DoImageShrink(args[0], buildWorkers(*nproc, *remotes))
 }
