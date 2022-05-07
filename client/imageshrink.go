@@ -35,7 +35,7 @@ func main() {
 		"remotes workers: host1:port1,host2:port2",
 	)
 	nproc := flag.Int(
-		"nproc", 1,
+		"nproc", 0,
 		"number of local processes",
 	)
 	flag.Parse()
@@ -44,5 +44,10 @@ func main() {
 		fmt.Printf("Usage: imageshrink [path to scan]\n")
 		return
 	}
-	common.DoImageShrink(args[0], buildWorkers(*nproc, *remotes))
+	workers := buildWorkers(*nproc, *remotes)
+	if workers == nil || len(workers) == 0 {
+		fmt.Printf("No worker available\n")
+		return
+	}
+	common.DoImageShrink(args[0], workers)
 }

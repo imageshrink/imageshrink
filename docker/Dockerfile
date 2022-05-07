@@ -1,0 +1,10 @@
+FROM ubuntu:22.04
+
+ADD sources.list /etc/apt/sources.list
+RUN apt-get -y update
+RUN apt-get -y install curl
+RUN apt-get -y install imagemagick
+RUN apt-get -y upgrade
+
+ADD imageshrink_server /usr/bin/imageshrink_server
+ENTRYPOINT ["/usr/bin/imageshrink_server"]

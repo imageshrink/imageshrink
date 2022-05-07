@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	port := flag.Int("port", 8080, "server port")
+	port := flag.Int("port", 58080, "server port")
 	dir := flag.String("dir", "/tmp/imageshrink", "working dir")
 	flag.Parse()
 	err := os.MkdirAll(*dir, 0755)
@@ -62,7 +62,9 @@ func main() {
 		if nil != err {
 			panic("[Fatal] " + err.Error())
 		}
-		command := exec.Command(convert, "-quality", "50", fileNameOld, fileNameNew)
+		command := exec.Command(
+			convert, "-auto-orient", "-quality", "90", fileNameOld, fileNameNew,
+		)
 		err = command.Run()
 		defer os.Remove(fileNameNew)
 		if nil != err {
