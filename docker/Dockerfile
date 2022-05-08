@@ -1,6 +1,5 @@
 FROM ubuntu:22.04
 
-ADD sources.list /etc/apt/sources.list
 RUN apt-get -y update
 RUN apt-get -y install build-essential
 RUN apt-get -y install curl
