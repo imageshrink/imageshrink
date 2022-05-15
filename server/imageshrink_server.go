@@ -63,7 +63,11 @@ func main() {
 			panic("[Fatal] " + err.Error())
 		}
 		command := exec.Command(
-			convert, "-auto-orient", "-quality", "50", fileNameOld, fileNameNew,
+			convert,
+			"-auto-orient",
+			"-quality", "50",
+			"-resize", "8192>",
+			fileNameOld, fileNameNew,
 		)
 		err = command.Run()
 		defer os.Remove(fileNameNew)

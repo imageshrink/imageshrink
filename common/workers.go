@@ -28,7 +28,11 @@ func localWorker(paths <-chan string, wg *sync.WaitGroup) {
 			panic("[Fatal] " + err.Error())
 		}
 		command := exec.Command(
-			convert, "-auto-orient", "-quality", "50", imagePath, imagePath+".HEIC",
+			convert,
+			"-auto-orient",
+			"-quality", "50",
+			"-resize", "8192>",
+			imagePath, imagePath+".HEIC",
 		)
 		err = command.Run()
 		if nil != err {

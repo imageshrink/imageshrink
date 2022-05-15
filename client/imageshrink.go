@@ -35,7 +35,7 @@ func main() {
 		"remotes workers: host1:port1,host2:port2",
 	)
 	nproc := flag.Int(
-		"nproc", 0,
+		"nproc", 1,
 		"number of local processes",
 	)
 	flag.Parse()
@@ -45,7 +45,7 @@ func main() {
 		return
 	}
 	workers := buildWorkers(*nproc, *remotes)
-	if workers == nil || len(workers) == 0 {
+	if len(workers) == 0 {
 		fmt.Printf("No worker available\n")
 		return
 	}
