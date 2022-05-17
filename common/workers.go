@@ -31,8 +31,8 @@ func localWorker(paths <-chan string, wg *sync.WaitGroup) {
 			convert,
 			"-auto-orient",
 			"-quality", "50",
-			"-resize", "8192>",
-			imagePath, imagePath+".HEIC",
+			"-resize", "8192x8192>",
+			imagePath, imagePath+".HEIF",
 		)
 		err = command.Run()
 		if nil != err {
@@ -91,12 +91,12 @@ func remoteWorker(
 			continue
 		}
 		imageFileNew, err := os.OpenFile(
-			imagePath+".HEIC", os.O_CREATE|os.O_WRONLY, 0644,
+			imagePath+".HEIF", os.O_CREATE|os.O_WRONLY, 0644,
 		)
 		if nil != err {
 			fmt.Printf(
 				"[Error] Failed to create image: %s, error: %s\n",
-				imagePath+".HEIC",
+				imagePath+".HEIF",
 				err,
 			)
 			continue
@@ -138,7 +138,7 @@ func DoImageShrink(scanPath string, workers []Worker) {
 			return nil
 		}
 		ext := path.Ext(filePath)
-		if !strings.EqualFold(ext, ".jpeg") && !strings.EqualFold(ext, ".jpg") {
+		if !strings.EqualFold(ext, ".jpeg") && !strings.EqualFold(ext, ".jpg") && !strings.EqualFold(ext, ".heic") {
 			return nil
 		}
 		imagePaths <- filePath

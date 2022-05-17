@@ -66,7 +66,7 @@ func main() {
 			convert,
 			"-auto-orient",
 			"-quality", "50",
-			"-resize", "8192>",
+			"-resize", "8192x8192>",
 			fileNameOld, fileNameNew,
 		)
 		err = command.Run()
